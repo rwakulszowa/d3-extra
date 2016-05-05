@@ -1,2 +1,11 @@
 # d3-extras
-Extra fields for d3 charts
+
+Add extra fields to your d3 plot - sum, average, whatever
+
+## Installing
+
+(...)
+
+## API Reference
+
+(...)

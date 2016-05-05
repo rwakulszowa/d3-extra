@@ -1,0 +1,28 @@
+{
+  "name": "d3-extras",
+  "version": "0.0.1",
+  "description": "Add extra fields to d3 plots",
+  "keywords": [
+    "d3", "extra", "extras"
+  ],
+  "license": "BSD-3-Clause",
+  "main": "build/d3-extras.js",
+  "jsnext:main": "index",
+  "homepage": "https://github.com/rwakulszowa/d3-extras",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rwakulszowa/d3-extras.git"
+  },
+  "scripts": {
+    "pretest": "rm -rf build && mkdir build && json2module package.json > build/package.js && rollup -f umd -n d3_extras -o build/d3-extras.js -- index.js",
+    "test": "tape 'test/**/*-test.js'",
+    "prepublish": "npm run test && uglifyjs build/d3-extras.js -c -m -o build/d3-extras.min.js",
+    "postpublish": "zip -j build/d3-extras.zip -- LICENSE README.md build/d3-extras.js build/d3-extras.min.js"
+  },
+  "devDependencies": {
+    "json2module": "0.0",
+    "rollup": "0.25",
+    "tape": "4",
+    "uglify-js": "2"
+  }
+}

@@ -1,1 +1,1 @@
-export {default as foo} from "./src/extras";
+export {extras} from "./src/extras";

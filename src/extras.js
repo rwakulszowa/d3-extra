@@ -1,26 +1,30 @@
 export function extras() {
-  var data = [],
-      aggregates = [],
+  var aggregates = [],
+      data = [],
       values = [];
 
   function extras(context) {
-    var selection = context.selection ? context.selection() : context,
-        values = this.values(),
-        extras = selection.selectAll(".extras")
-            .data(values);
+      //TODO: try to capture context data
   }
 
-  extras.data = function(_) {
-      return arguments.length ? (data = _, extras) : data;
-  };
+  //TODO: alias for appending a map reduce function
 
-  extras.aggregates = function(_) {  //TODO: alias for appending a reduce function
+  extras.aggregates = function(_) {  //TODO: bind names with aggregates
       return arguments.length ? (aggregates = _, extras) : aggregates;  //TODO: if not array, convert to array
+  };  //TODO: additional utils -> max could return selection of max element, avg could draw a line of avg value etc.
+
+  extras.data = function(_) {
+      return arguments.length ? (
+        data = _,
+        values = aggregates.map(function(foo) { return foo(data); }),
+        extras
+      ) : data;
   };
 
-  extras.values = function() {
-      return aggregates.map(function(fun) { return fun(data); });
+  extras.values = function(_) {
+      return arguments.length ? (values = _, extras) : values;
   };
 
   return extras;
 }
+//TODO: convert those TODOs to github issues

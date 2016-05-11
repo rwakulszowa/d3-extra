@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.bar {
+  fill: mediumaquamarine;
+}
+
+.bar:hover {
+  fill: turquoise ;
+  stroke: #000;
+}
+
+.axis text {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+</style>
+<body>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="../build/d3-extras.js"></script>
+<script>
+
+var margin = {top: 20, right: 30, bottom: 30, left: 40},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var x = d3.scale.ordinal()
+    .rangeRoundBands([0, width], .1);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var xAxis = d3.svg.axis()
+    .orient("bottom")
+    .scale(x);
+
+var yAxis = d3.svg.axis()
+    .orient("left")
+    .scale(y);
+
+var extras = d3_extras.extras()
+    .aggregates([
+      function(data) { return data.map(
+        function(d) { return d.frequency; }
+      ).reduce(
+        function(a,b) { return Math.max(a,b); },
+        Number.MIN_VALUE
+      )},
+      function(data) { return data.map(
+        function(d) { return d.frequency; }
+      ).reduce(
+        function(a,b) { return Math.min(a,b); },
+        Number.MAX_VALUE
+      )}
+    ]);
+
+d3.tsv("./letters.tsv", function(error, data) {
+  if (error) throw error;
+
+  x.domain(data.map(function(d) { return d.letter; }));
+  y.domain([0, d3.max(data, function(d) { return d.frequency; })]);
+
+  var bars = svg.selectAll(".bar")
+        .data(data)
+      .enter().append("rect")
+        .attr("class", "bar")
+        .attr("x", function(d) { return x(d.letter); })
+        .attr("y", function(d) { return y(d.frequency); })
+        .attr("width", x.rangeBand())
+        .attr("height", function(d) { return height - y(d.frequency); });
+
+  extras.data(data);
+  console.log("Computed extras: ", extras.values());
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis);
+
+  svg.append("g")
+      .attr("class", "extras")
+      .call(extras);
+});
+
+</script>

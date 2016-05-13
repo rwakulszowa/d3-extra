@@ -7,6 +7,11 @@ export function extras() {
       //TODO: try to capture context data
   }
 
+  function refresh() {
+      values = aggregates.map(function(foo) { return foo(data); });
+      return extras;
+  }
+
   //TODO: alias for appending a map reduce function
 
   extras.aggregates = function(_) {  //TODO: bind names with aggregates
@@ -19,14 +24,15 @@ export function extras() {
   extras.data = function(_) {
       return arguments.length ? (
         data = _,
-        values = aggregates.map(function(foo) { return foo(data); }),
-        extras
+        refresh()
       ) : data;
   };
 
   extras.values = function(_) {
       return arguments.length ? (values = _, extras) : values;
   };
+
+  extras.refresh = refresh;
 
   return extras;
 }

@@ -10,7 +10,10 @@ export function extras() {
   //TODO: alias for appending a map reduce function
 
   extras.aggregates = function(_) {  //TODO: bind names with aggregates
-      return arguments.length ? (aggregates = _, extras) : aggregates;  //TODO: if not array, convert to array
+      return arguments.length ? (
+        aggregates = Array.isArray(_) ? _ : [_],  //convert _ to array if it's a single element
+        extras
+      ) : aggregates;
   };  //TODO: additional utils -> max could return selection of max element, avg could draw a line of avg value etc.
 
   extras.data = function(_) {
@@ -27,4 +30,3 @@ export function extras() {
 
   return extras;
 }
-//TODO: convert those TODOs to github issues

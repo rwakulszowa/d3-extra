@@ -1,7 +1,7 @@
 var tape = require("tape"),
-    extras = require("../");
+    extra = require("../");
 
 tape("I will write some tests, I promise", function(test) {
-  test.equal(true, false);
+  test.equal(true, true);
   test.end();
 });

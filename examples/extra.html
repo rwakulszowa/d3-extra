@@ -25,7 +25,7 @@
 </style>
 <body>
 <script src="https://d3js.org/d3.v3.min.js"></script>
-<script src="../build/d3-extras.js"></script>
+<script src="../build/d3-extra.js"></script>
 <script>
 
 var margin = {top: 20, right: 30, bottom: 30, left: 40},
@@ -52,8 +52,8 @@ var yAxis = d3.svg.axis()
     .orient("left")
     .scale(y);
 
-var extras = d3_extras.extras()
-    .aggregates([
+var extra = d3_extra.extra()
+    .extras([
       function(data) { return data.map(
         function(d) { return d.frequency; }
       ).reduce(
@@ -83,8 +83,8 @@ d3.tsv("./letters.tsv", function(error, data) {
         .attr("width", x.rangeBand())
         .attr("height", function(d) { return height - y(d.frequency); });
 
-  extras.data(data);
-  console.log("Computed extras: ", extras.values());
+  extra.data(data);
+  console.log("Computed extra: ", extra.values());
 
   svg.append("g")
       .attr("class", "x axis")
@@ -96,8 +96,8 @@ d3.tsv("./letters.tsv", function(error, data) {
       .call(yAxis);
 
   svg.append("g")
-      .attr("class", "extras")
-      .call(extras);
+      .attr("class", "extra")
+      .call(extra);
 });
 
 </script>

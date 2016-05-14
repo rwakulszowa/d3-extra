@@ -1,23 +1,23 @@
 {
-  "name": "d3-extras",
+  "name": "d3-extra",
   "version": "0.0.1",
   "description": "Add extra fields to d3 plots",
   "keywords": [
-    "d3", "extra", "extras"
+    "d3", "extra", "extra"
   ],
   "license": "BSD-3-Clause",
-  "main": "build/d3-extras.js",
+  "main": "build/d3-extra.js",
   "jsnext:main": "index",
-  "homepage": "https://github.com/rwakulszowa/d3-extras",
+  "homepage": "https://github.com/rwakulszowa/d3-extra",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rwakulszowa/d3-extras.git"
+    "url": "https://github.com/rwakulszowa/d3-extra.git"
   },
   "scripts": {
-    "pretest": "rm -rf build && mkdir build && json2module package.json > build/package.js && rollup -f umd -n d3_extras -o build/d3-extras.js -- index.js",
+    "pretest": "rm -rf build && mkdir build && json2module package.json > build/package.js && rollup -f umd -n d3_extra -o build/d3-extra.js -- index.js",
     "test": "tape 'test/**/*-test.js'",
-    "prepublish": "npm run test && uglifyjs build/d3-extras.js -c -m -o build/d3-extras.min.js",
-    "postpublish": "zip -j build/d3-extras.zip -- LICENSE README.md build/d3-extras.js build/d3-extras.min.js"
+    "prepublish": "npm run test && uglifyjs build/d3-extra.js -c -m -o build/d3-extra.min.js",
+    "postpublish": "zip -j build/d3-extra.zip -- LICENSE README.md build/d3-extra.js build/d3-extra.min.js"
   },
   "devDependencies": {
     "json2module": "0.0",

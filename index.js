@@ -1,1 +1,1 @@
-export {extras} from "./src/extras";
+export {extra} from "./src/extra";

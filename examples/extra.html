@@ -81,9 +81,9 @@ d3.tsv("./letters.tsv", function(error, data) {
         .attr("x", function(d) { return x(d.letter); })
         .attr("y", function(d) { return y(d.frequency); })
         .attr("width", x.rangeBand())
-        .attr("height", function(d) { return height - y(d.frequency); });
+        .attr("height", function(d) { return height - y(d.frequency); })
+        .call(extra);
 
-  extra.data(data);
   console.log("Computed extra: ", extra.values());
 
   svg.append("g")
@@ -94,10 +94,6 @@ d3.tsv("./letters.tsv", function(error, data) {
   svg.append("g")
       .attr("class", "y axis")
       .call(yAxis);
-
-  svg.append("g")
-      .attr("class", "extra")
-      .call(extra);
 });
 
 </script>

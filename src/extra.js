@@ -1,25 +1,26 @@
 export function extra() {
-  var data = [],
+  var context = null,
+      data = [],
       extras = [],
       values = [];
 
-  function extra(context) {
-      //TODO: try to capture context data
+  function extra(c) {
+      context = c;
+      data = context.data();
+      refresh();
   }
 
   function refresh() {
-      values = extras.map(function(foo) { return foo(data); });
+      values = extras.map(function(foo) { return foo(data, context); });
       return extra;
   }
 
-  //TODO: alias for appending a map reduce function
-
-  extra.extras = function(_) {
+  extra.context = function(_) {
       return arguments.length ? (
-        extras = Array.isArray(_) ? _ : [_],  //convert _ to array if it's a single element
+        context = _,
         extra
-      ) : extras;
-  };  //TODO: additional utils -> max could return selection of max element, avg could draw a line of avg value etc.
+      ) : context;
+  };
 
   extra.data = function(_) {
       return arguments.length ? (
@@ -28,6 +29,13 @@ export function extra() {
       ) : data;
   };
 
+  extra.extras = function(_) {
+    return arguments.length ? (
+      extras = Array.isArray(_) ? _ : [_],  //convert _ to array if it's a single element
+      extra
+    ) : extras;
+  };
+  
   extra.values = function(_) {
       return arguments.length ? (
         values = _,

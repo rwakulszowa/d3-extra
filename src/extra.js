@@ -25,7 +25,7 @@ export function extra() {
   extra.data = function(_) {
       return arguments.length ? (
         data = _,
-        refresh()
+        extra
       ) : data;
   };
 
@@ -35,7 +35,7 @@ export function extra() {
       extra
     ) : extras;
   };
-  
+
   extra.values = function(_) {
       return arguments.length ? (
         values = _,

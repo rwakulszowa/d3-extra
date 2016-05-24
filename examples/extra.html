@@ -54,18 +54,24 @@ var yAxis = d3.svg.axis()
 
 var extra = d3_extra.extra()
     .extras([
-      function(data) { return data.map(
-        function(d) { return d.frequency; }
-      ).reduce(
-        function(a,b) { return Math.max(a,b); },
-        Number.MIN_VALUE
-      )},
-      function(data) { return data.map(
-        function(d) { return d.frequency; }
-      ).reduce(
-        function(a,b) { return Math.min(a,b); },
-        Number.MAX_VALUE
-      )}
+      function(data) { return {
+        name: "MAX",
+        value: data.map(
+          function(d) { return d.frequency; }
+        ).reduce(
+          function(a,b) { return Math.max(a,b); },
+          Number.MIN_VALUE
+        )
+      }},
+      function(data) { return {
+        name: "MIN",
+        value: data.map(
+          function(d) { return d.frequency; }
+        ).reduce(
+          function(a,b) { return Math.min(a,b); },
+          Number.MAX_VALUE
+        )
+      }}
     ]);
 
 d3.tsv("./letters.tsv", function(error, data) {

@@ -22,27 +22,52 @@
   shape-rendering: crispEdges;
 }
 
+.extra .cell {
+  stroke-width: 2.5px;
+  stroke: #abc;
+  fill: none;
+}
+
+.extra .label {
+  font: 16px sans-serif;
+}
+
+.extra .value {
+  font: 13px sans-serif;
+}
+
 </style>
 <body>
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script src="../build/d3-extra.js"></script>
 <script>
 
-var margin = {top: 20, right: 30, bottom: 30, left: 40},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+var plotMargin = {top: 20, right: 30, bottom: 30, left: 40},
+    tableMargin = {top: 10, right: 30, bottom: 10, left: 40},
+    svgWidth = 960,
+    svgHeight = 500,
+    plotWidth = 960 - plotMargin.left - plotMargin.right,
+    plotHeight = 400 - plotMargin.top - plotMargin.bottom,
+    tableWidth = 960 - tableMargin.left - tableMargin.right,
+    tableHeight = 100 - tableMargin.top - tableMargin.bottom,
+    cellSpacing = 25,
+    cellWidth = 100;
 
 var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    .attr("width", svgWidth)
+    .attr("height", svgHeight);
+
+var plot = svg.append("g")
+    .attr("transform", "translate(" + plotMargin.left + "," + plotMargin.top + ")");
+
+var table = svg.append("g")
+    .attr("transform", "translate(" + tableMargin.left + "," + (plotMargin.top + plotHeight + plotMargin.bottom + tableMargin.top) + ")");
 
 var x = d3.scale.ordinal()
-    .rangeRoundBands([0, width], .1);
+    .rangeRoundBands([0, plotWidth], .1);
 
 var y = d3.scale.linear()
-    .range([height, 0]);
+    .range([plotHeight, 0]);
 
 var xAxis = d3.svg.axis()
     .orient("bottom")
@@ -55,22 +80,37 @@ var yAxis = d3.svg.axis()
 var extra = d3_extra.extra()
     .extras([
       function(data) { return {
-        name: "MAX",
+        label: "MAX",
         value: data.map(
           function(d) { return d.frequency; }
         ).reduce(
           function(a,b) { return Math.max(a,b); },
           Number.MIN_VALUE
-        )
+        ).toFixed(5)
       }},
       function(data) { return {
-        name: "MIN",
+        label: "MIN",
         value: data.map(
           function(d) { return d.frequency; }
         ).reduce(
           function(a,b) { return Math.min(a,b); },
           Number.MAX_VALUE
-        )
+        ).toFixed(5)
+      }},
+      function(data) { return {
+        label: "MEDIAN",
+        value: d3.median(
+          data,
+          function(d) { return d.frequency; }
+        ).toFixed(5)
+      }},
+      function(data) { return {
+        label: "COUNT",
+        value: data.length
+      }},
+      function(data) { return {
+        label: "WHATEVER",
+        value: "whatever"
       }}
     ]);
 
@@ -80,26 +120,50 @@ d3.tsv("./letters.tsv", function(error, data) {
   x.domain(data.map(function(d) { return d.letter; }));
   y.domain([0, d3.max(data, function(d) { return d.frequency; })]);
 
-  var bars = svg.selectAll(".bar")
+  var bars = plot.selectAll(".bar")
         .data(data)
       .enter().append("rect")
         .attr("class", "bar")
         .attr("x", function(d) { return x(d.letter); })
         .attr("y", function(d) { return y(d.frequency); })
         .attr("width", x.rangeBand())
-        .attr("height", function(d) { return height - y(d.frequency); })
+        .attr("height", function(d) { return plotHeight - y(d.frequency); })
         .call(extra);
 
-  console.log("Computed extra: ", extra.values());
-
-  svg.append("g")
+  plot.append("g")
       .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
+      .attr("transform", "translate(0," + plotHeight + ")")
       .call(xAxis);
 
-  svg.append("g")
+  plot.append("g")
       .attr("class", "y axis")
       .call(yAxis);
+
+  var extras = table.selectAll(".extra")
+      .data(extra.values())
+    .enter().append("g")
+      .attr("class", "extra")
+      .attr("transform", function(d, i) { return "translate(" + (i * (cellWidth + cellSpacing)) + ", 0)"});
+
+  extras.append("rect")
+      .attr("class", "cell")
+      .attr("width", cellWidth)
+      .attr("height", tableHeight)
+      .attr("rx", 4);
+
+  extras.append("text")
+      .attr("class", "label")
+      .attr("x", cellWidth / 2)
+      .attr("y", tableHeight * 0.45)
+      .attr("text-anchor", "middle")
+      .text(function(d) { return d.label; });
+
+  extras.append("text")
+      .attr("class", "value")
+      .attr("x", cellWidth / 2)
+      .attr("y", tableHeight * 0.75)
+      .attr("text-anchor", "middle")
+      .text(function(d) { return d.value; });
 });
 
 </script>

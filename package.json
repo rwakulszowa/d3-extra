@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "description": "Add extra fields to d3 plots",
   "keywords": [
-    "d3", "extra", "extra"
+    "d3", "extra", "extras"
   ],
-  "license": "BSD-3-Clause",
+  "license": "MIT",
   "main": "build/d3-extra.js",
   "jsnext:main": "index",
   "homepage": "https://github.com/rwakulszowa/d3-extra",

@@ -5,55 +5,48 @@
 }(this, function (exports) { 'use strict';
 
   function extra() {
-    var container = null,
-        cell = null,
-        data = [],
+    var cell = null,
+        container = null,
+        input = [],
         extras = [],
-        values = [];
+        output = [];
 
     function extra(context) {
-        data = context.data();
+        input = context.data();
         container = container ? container : d3.select(context.node().parentNode);  // use selection's parent node unless container was explicitly set
-        refresh();
+        compute();
         draw();
     }
 
     function draw() {
       var width = container.node().getAttribute("width") * 1;
-      var cellWidth = width / values.length;
+      var cellWidth = width / output.length;
       var grid = container.selectAll(".cell")
-          .data(values)
+          .data(output)
         .enter().append("g")
           .attr("class", "cell")
           .attr("transform", function(d, i) { return "translate(" + i * cellWidth + ", 0)"})
           .call(cell);
-      return grid;
+      return extra;
     }
 
-    function refresh() {
-        values = extras.map(function(foo) { return foo(data); });
+    function compute() {
+        output = extras.map(function(foo) { return foo(input); });
         return extra;
     }
+
+    extra.cell = function(_) {
+      return arguments.length ? (
+        cell = _,
+        extra
+      ) : cell;
+    };
 
     extra.container = function(_) {
         return arguments.length ? (
           container = _,
           extra
         ) : container;
-    };
-
-    extra.cell = function(_) {
-        return arguments.length ? (
-          cell = _,
-          extra
-        ) : cell;
-    };
-
-    extra.data = function(_) {
-        return arguments.length ? (
-          data = _,
-          extra
-        ) : data;
     };
 
     extra.extras = function(_) {
@@ -63,14 +56,21 @@
       ) : extras;
     };
 
-    extra.values = function(_) {
+    extra.input = function(_) {
         return arguments.length ? (
-          values = _,
+          input = _,
           extra
-        ) : values;
+        ) : input;
     };
 
-    extra.refresh = refresh;
+    extra.output = function(_) {
+        return arguments.length ? (
+          output = _,
+          extra
+        ) : output;
+    };
+
+    extra.compute = compute;
     extra.draw = draw;
 
     return extra;

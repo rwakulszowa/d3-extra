@@ -14,7 +14,7 @@
     "url": "https://github.com/rwakulszowa/d3-extra.git"
   },
   "scripts": {
-    "pretest": "rm -rf build && mkdir build && json2module package.json > build/package.js && rollup -f umd -n d3_extra -o build/d3-extra.js -- index.js",
+    "pretest": "rm -rf build && mkdir build && json2module package.json > build/package.js && rollup -f umd -n d3_extra -o build/d3-extra.js -- index.js && cp build/d3-extra.js examples/d3-extra.js",
     "test": "tape 'test/**/*-test.js'",
     "prepublish": "npm run test && uglifyjs build/d3-extra.js -c -m -o build/d3-extra.min.js",
     "postpublish": "zip -j build/d3-extra.zip -- LICENSE README.md build/d3-extra.js build/d3-extra.min.js"

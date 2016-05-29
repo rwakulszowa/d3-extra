@@ -82,34 +82,34 @@ var yAxis = d3.svg.axis()
 var extra = d3_extra.extra()
     .container(table)
     .extras([
-      function(data) { return {
+      function(input) { return {
         label: "MAX",
-        value: data.map(
-          function(d) { return d.frequency; }
+        value: input.map(
+          function(i) { return i.frequency; }
         ).reduce(
           function(a,b) { return Math.max(a,b); },
           Number.MIN_VALUE
         ).toFixed(5)
       }},
-      function(data) { return {
+      function(input) { return {
         label: "MIN",
-        value: data.map(
-          function(d) { return d.frequency; }
+        value: input.map(
+          function(i) { return i.frequency; }
         ).reduce(
           function(a,b) { return Math.min(a,b); },
           Number.MAX_VALUE
         ).toFixed(5)
       }},
-      function(data) { return {
+      function(input) { return {
         label: "MEDIAN",
         value: d3.median(
-          data,
-          function(d) { return d.frequency; }
+          input,
+          function(i) { return i.frequency; }
         ).toFixed(5)
       }},
-      function(data) { return {
+      function(input) { return {
         label: "COUNT",
-        value: data.length
+        value: input.length
       }},
       function(data) { return {
         label: "WHATEVER",

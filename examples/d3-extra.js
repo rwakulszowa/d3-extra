@@ -5,27 +5,48 @@
 }(this, function (exports) { 'use strict';
 
   function extra() {
-    var context = null,
+    var container = null,
+        cell = null,
         data = [],
         extras = [],
         values = [];
 
-    function extra(c) {
-        context = c;
+    function extra(context) {
         data = context.data();
+        container = container ? container : d3.select(context.node().parentNode);  // use selection's parent node unless container was explicitly set
         refresh();
+        draw();
+    }
+
+    function draw() {
+      var width = container.node().getAttribute("width") * 1;
+      var cellWidth = width / values.length;
+      var grid = container.selectAll(".cell")
+          .data(values)
+        .enter().append("g")
+          .attr("class", "cell")
+          .attr("transform", function(d, i) { return "translate(" + i * cellWidth + ", 0)"})
+          .call(cell);
+      return grid;
     }
 
     function refresh() {
-        values = extras.map(function(foo) { return foo(data, context); });
+        values = extras.map(function(foo) { return foo(data); });
         return extra;
     }
 
-    extra.context = function(_) {
+    extra.container = function(_) {
         return arguments.length ? (
-          context = _,
+          container = _,
           extra
-        ) : context;
+        ) : container;
+    };
+
+    extra.cell = function(_) {
+        return arguments.length ? (
+          cell = _,
+          extra
+        ) : cell;
     };
 
     extra.data = function(_) {
@@ -50,6 +71,7 @@
     };
 
     extra.refresh = refresh;
+    extra.draw = draw;
 
     return extra;
   }

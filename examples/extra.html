@@ -22,17 +22,17 @@
   shape-rendering: crispEdges;
 }
 
-.extra .cell {
+.cell .box {
   stroke-width: 2.5px;
   stroke: mediumaquamarine;
   fill: none;
 }
 
-.extra .label {
+.cell .label {
   font: 16px sans-serif;
 }
 
-.extra .value {
+.cell .value {
   font: 13px sans-serif;
 }
 
@@ -61,7 +61,9 @@ var plot = svg.append("g")
     .attr("transform", "translate(" + plotMargin.left + "," + plotMargin.top + ")");
 
 var table = svg.append("g")
-    .attr("transform", "translate(" + tableMargin.left + "," + (plotMargin.top + plotHeight + plotMargin.bottom + tableMargin.top) + ")");
+    .attr("transform", "translate(" + tableMargin.left + "," + (plotMargin.top + plotHeight + plotMargin.bottom + tableMargin.top) + ")")
+    .attr("width", tableWidth)
+    .attr("height", tableHeight);
 
 var x = d3.scale.ordinal()
     .rangeRoundBands([0, plotWidth], .1);
@@ -78,6 +80,7 @@ var yAxis = d3.svg.axis()
     .scale(y);
 
 var extra = d3_extra.extra()
+    .container(table)
     .extras([
       function(data) { return {
         label: "MAX",
@@ -114,6 +117,28 @@ var extra = d3_extra.extra()
       }}
     ]);
 
+extra.cell(function(cell) {
+    cell.append("rect")
+        .attr("class", "box")
+        .attr("width", cellWidth)
+        .attr("height", tableHeight)
+        .attr("rx", 4);
+
+    cell.append("text")
+        .attr("class", "label")
+        .attr("x", cellWidth / 2)
+        .attr("y", tableHeight * 0.45)
+        .attr("text-anchor", "middle")
+        .text(function(d) { return d.label; });
+
+    cell.append("text")
+        .attr("class", "value")
+        .attr("x", cellWidth / 2)
+        .attr("y", tableHeight * 0.75)
+        .attr("text-anchor", "middle")
+        .text(function(d) { return d.value; });
+});
+
 d3.tsv("./letters.tsv", function(error, data) {
   if (error) throw error;
 
@@ -138,32 +163,6 @@ d3.tsv("./letters.tsv", function(error, data) {
   plot.append("g")
       .attr("class", "y axis")
       .call(yAxis);
-
-  var extras = table.selectAll(".extra")
-      .data(extra.values())
-    .enter().append("g")
-      .attr("class", "extra")
-      .attr("transform", function(d, i) { return "translate(" + (i * (cellWidth + cellSpacing)) + ", 0)"});
-
-  extras.append("rect")
-      .attr("class", "cell")
-      .attr("width", cellWidth)
-      .attr("height", tableHeight)
-      .attr("rx", 4);
-
-  extras.append("text")
-      .attr("class", "label")
-      .attr("x", cellWidth / 2)
-      .attr("y", tableHeight * 0.45)
-      .attr("text-anchor", "middle")
-      .text(function(d) { return d.label; });
-
-  extras.append("text")
-      .attr("class", "value")
-      .attr("x", cellWidth / 2)
-      .attr("y", tableHeight * 0.75)
-      .attr("text-anchor", "middle")
-      .text(function(d) { return d.value; });
 });
 
 </script>
